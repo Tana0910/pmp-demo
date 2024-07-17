@@ -43,7 +43,25 @@ int main()
         std::cout << "(x, y, z) = (" << *ppos << ", " << *(ppos + 1) << ", " << *(ppos + 2) << ")" << std::endl;
     }
 
-    std::cout << "===========================" << std::endl;
+    auto points = mesh.get_vertex_property<pmp::Point>("v:point");
+    if (points.data() != nullptr)
+    {
+        for (auto& point : points.vector())
+        {
+            std::cout << "(x, y, z) = (" << point << ")" << std::endl;
+        }
 
+        pmp::Point bc(0, 0, 0);
+        for (const auto& v : mesh.vertices())
+        {
+            bc += points[v];
+        }
+
+        bc /= mesh.n_vertices();
+        std::cout << "n_vertices = " << mesh.n_vertices() << std::endl;
+        std::cout << "barycenter = (" << bc << ")" << std::endl;
+    }
+
+    std::cout << "===========================" << std::endl;
     return 0;
 }
